@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YouCopy • Painel Online</title>
+<style>
+body{font-family:Arial,sans-serif;background:#111;color:#fff;margin:0;padding:18px}
+.card{max-width:700px;margin:auto;background:#1d1d1d;padding:18px;border-radius:14px}
+h1{margin-top:0}.grid{display:grid;gap:10px}
+input,select,button{width:100%;box-sizing:border-box;padding:12px;border-radius:8px;border:1px solid #444;background:#292929;color:#fff}
+button{cursor:pointer;background:#2563eb;border:0;font-weight:bold}.danger{background:#b91c1c}.secondary{background:#444}
+.item{padding:12px;margin-top:10px;background:#292929;border-radius:10px}.item small{color:#aaa}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#status{margin:12px 0;color:#9ee493}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>YouCopy — Painel Online</h1>
+<p>Altere o catálogo online. Os usuários recebem as mudanças pelo <b>catalog.json</b>, sem precisar gerar outro APK.</p>
+<div class="grid">
+<label>Token do GitHub (não será salvo)</label>
+<input id="token" type="password" placeholder="ghp_... ou token fine-grained">
+<div class="row">
+<div><label>Tipo</label><select id="type"><option>Filme</option><option>Série</option><option>TV</option><option>18+</option></select></div>
+<div><label>Título</label><input id="title" placeholder="Nome do conteúdo"></div>
+</div>
+<label>URL do vídeo (MP4, HLS/M3U8 etc.)</label>
+<input id="url" placeholder="https://...">
+<div class="row">
+<button onclick="addItem()">Adicionar</button>
+<button class="secondary" onclick="loadCatalog()">Recarregar</button>
+</div>
+<div id="status"></div>
+<div id="list"></div>
+</div>
+</div>
+<script>
+const owner="trixluans23-droid", repo="YouCopy-Android", path="catalog.json", branch="main";
+let items=[], sha="";
+const $=id=>document.getElementById(id);
+function msg(t){$("status").textContent=t}
+async function api(url,opts={}){const token=$("token").value.trim(); if(!token) throw Error("Informe o token do GitHub."); opts.headers={...(opts.headers||{}),Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"}; const r=await fetch(url,opts); if(!r.ok) throw Error((await r.text()).slice(0,300)); return r.json()}
+async function loadCatalog(){
+ try{msg("Carregando catálogo..."); const r=await fetch("https://raw.githubusercontent.com/"+owner+"/"+repo+"/"+branch+"/"+path+"?t="+Date.now()); items=await r.json();
+ const meta=await api("https://api.github.com/repos/"+owner+"/"+repo+"/contents/"+path+"?ref="+branch); sha=meta.sha; render(); msg("Catálogo carregado: "+items.length+" item(ns).")}
+ catch(e){msg("Erro: "+e.message)}
+}
+function render(){
+ $("list").innerHTML=items.map((x,i)=>'<div class="item"><b>'+esc(x.title)+'</b><br><small>'+esc(x.type)+'<br>'+esc(x.videoUrl)+'</small><div class="row" style="margin-top:8px"><button onclick="editItem('+i+')">Editar</button><button class="danger" onclick="deleteItem('+i+')">Excluir</button></div></div>').join("");
+}
+function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function addItem(){const title=$("title").value.trim(), url=$("url").value.trim(); if(!title||!url){msg("Preencha título e URL.");return} items.push({type:$("type").value,title,videoUrl:url}); $("title").value="";$("url").value="";render(); saveCatalog()}
+function editItem(i){const x=items[i]; const title=prompt("Título:",x.title); if(title===null)return; const url=prompt("URL do vídeo:",x.videoUrl); if(url===null)return; const type=prompt("Tipo (Filme, Série, TV ou 18+):",x.type); if(type===null)return; items[i]={type,title:title.trim(),videoUrl:url.trim()};render();saveCatalog()}
+function deleteItem(i){if(confirm("Excluir "+items[i].title+"?")){items.splice(i,1);render();saveCatalog()}}
+async function saveCatalog(){
+ try{msg("Salvando online..."); const r=await api("https://api.github.com/repos/"+owner+"/"+repo+"/contents/"+path,{method:"PUT",body:JSON.stringify({message:"Update online catalog",content:btoa(unescape(encodeURIComponent(JSON.stringify(items,null,2)+"\n"))),sha,branch})}); sha=r.content.sha; msg("Salvo online. Os usuários verão a alteração ao recarregar o catálogo.")}
+ catch(e){msg("Não foi salvo: "+e.message)}
+}
+</script>
+</body>
+</html>
