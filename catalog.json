@@ -1,11 +1,11 @@
 [
-  {"type":"Filme","title":"Frankenstein (2025)","videoUrl":"https://www.netflix.com/br/title/81507921"},
-  {"type":"Filme","title":"Pecadores (2025) ⭐ 7,5 IMDb","videoUrl":"https://br.justwatch.com/br/filme/pecadores"},
-  {"type":"Filme","title":"Mickey 17 (2025) ⭐ 6,7 IMDb","videoUrl":"https://www.primevideo.com/-/pt/detail/0OGMHRNC2NF2M8E7DKDEV3GFXU?tr=br"},
-  {"type":"Filme","title":"Missão: Impossível - O Acerto Final (2025) ⭐ 7,1 IMDb","videoUrl":"https://www.primevideo.com/-/pt/detail/0PA3YS8Y28Z5AIPN2YV5JX93NN?tr=br"},
-  {"type":"Filme","title":"Lilo & Stitch (2025)","videoUrl":"https://www.disneyplus.com/pt-br/browse/entity-3edb5cb2-fba6-4473-bfa2-8a867e00bdeb"},
-  {"type":"Filme","title":"Thunderbolts* (2025)","videoUrl":"https://www.disneyplus.com/pt-br/browse/entity-f51dce23-7d8f-490a-9f0c-be1b5432c2a9"},
+  {"type":"Filme","title":"Frankenstein (2025)","posterUrl":"https://m.media-amazon.com/images/S/pv-target-images/05635f48448690d1c4ab8b90f2e9f00fab64804669b9606f089548fed0e93f3a._SX1080_FMjpg_.jpg","videoUrl":"https://www.netflix.com/br/title/81507921"},
+  {"type":"Filme","title":"Pecadores (2025) ⭐ 7,5 IMDb","posterUrl":"https://m.media-amazon.com/images/M/MV5BMWY3MzM1Y2YtZWIzOS00ZWJiLWI1YzYtZDY5MzFkY2I4ZjY5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg","videoUrl":"https://br.justwatch.com/br/filme/pecadores"},
+  {"type":"Filme","title":"Mickey 17 (2025) ⭐ 6,7 IMDb","posterUrl":"https://upload.wikimedia.org/wikipedia/en/2/2d/Mickey_17_film_poster.png","videoUrl":"https://www.primevideo.com/-/pt/detail/0OGMHRNC2NF2M8E7DKDEV3GFXU?tr=br"},
+  {"type":"Filme","title":"Missão: Impossível - O Acerto Final (2025) ⭐ 7,1 IMDb","posterUrl":"https://image.tmdb.org/t/p/w500/AozMgdALZuR1hDPZt2a1aXiWmL4.jpg","videoUrl":"https://www.primevideo.com/-/pt/detail/0PA3YS8Y28Z5AIPN2YV5JX93NN?tr=br"},
+  {"type":"Filme","title":"Lilo & Stitch (2025)","posterUrl":"https://m.media-amazon.com/images/M/MV5BMzM0NTRkZWUtOTg5OC00YTBmLWI5NDEtZjQ5NjUwZTEyMTIxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg","videoUrl":"https://www.disneyplus.com/pt-br/browse/entity-3edb5cb2-fba6-4473-bfa2-8a867e00bdeb"},
+  {"type":"Filme","title":"Thunderbolts* (2025)","posterUrl":"https://m.media-amazon.com/images/M/MV5BMjQ2MzFiZDktOGQ3NC00NjQxLTkzYjEtMWQ4YThmMjFjNjUzXkEyXkFqcGc@._V1_SX300.jpg","videoUrl":"https://www.disneyplus.com/pt-br/browse/entity-f51dce23-7d8f-490a-9f0c-be1b5432c2a9"},
   {"type":"Filme","title":"Homem com H (2025)","videoUrl":"https://www.netflix.com/br/title/81754156"},
   {"type":"Série","title":"Ballard: Crimes sem Resposta (2025) ⭐ 7,5 IMDb","videoUrl":"https://www.primevideo.com/-/pt/detail/0ILO92GVINNDGJCYDU0R8GF5G4?tr=br"},
-  {"type":"Série","title":"Black Mirror - Temporada 7 (2025)","videoUrl":"https://www.netflix.com/br/title/70264888"}
+  {"type":"Série","title":"Black Mirror - Temporada 7 (2025)","posterUrl":"https://m.media-amazon.com/images/M/MV5BZTgyNTBkNzctN2I3NC00NTA1LWJiMDMtYzA2MmYyZjc1NWQzXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg","videoUrl":"https://www.netflix.com/br/title/70264888"}
 ]
