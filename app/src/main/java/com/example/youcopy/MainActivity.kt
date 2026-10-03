@@ -3,6 +3,8 @@ package com.example.youcopy
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.*
@@ -44,7 +46,7 @@ class MainActivity : Activity() {
     private fun loadCatalog() {
         Thread {
             try {
-                val connection = URL(catalogUrl).openConnection() as HttpURLConnection
+                val connection = URL(catalogUrl + "?v=" + System.currentTimeMillis()).openConnection() as HttpURLConnection
                 connection.connectTimeout = 10000
                 connection.readTimeout = 10000
                 connection.requestMethod = "GET"
@@ -93,19 +95,31 @@ class MainActivity : Activity() {
                     .setTitle("Conteúdo 18+")
                     .setMessage("Esta área é destinada exclusivamente a maiores de 18 anos.")
                     .setNegativeButton("Voltar", null)
-                    .setPositiveButton("Continuar") { _, _ -> playVideo(filtered[position]) }
+                    .setPositiveButton("Continuar") { _, _ -> openContent(filtered[position]) }
                     .show()
             } else {
-                playVideo(filtered[position])
+                openContent(filtered[position])
             }
         }
     }
 
-    private fun playVideo(videoUrl: String) {
-        if (videoUrl.isBlank()) {
-            Toast.makeText(this, "Este item ainda não possui vídeo.", Toast.LENGTH_SHORT).show()
+    private fun openContent(url: String) {
+        if (url.isBlank()) {
+            Toast.makeText(this, "Este item ainda não possui link.", Toast.LENGTH_SHORT).show()
             return
         }
+        val lower = url.lowercase()
+        val isDirectVideo = lower.contains(".mp4") || lower.contains(".m3u8") ||
+            lower.contains(".mkv") || lower.contains(".mov") || lower.contains(".webm")
+        if (!isDirectVideo) {
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            } catch (e: Exception) {
+                Toast.makeText(this, "Não foi possível abrir este conteúdo.", Toast.LENGTH_SHORT).show()
+            }
+            return
+        }
+
         val dialog = Dialog(this)
         val playerView = PlayerView(this)
         dialog.setContentView(playerView)
@@ -114,7 +128,7 @@ class MainActivity : Activity() {
         player?.release()
         player = ExoPlayer.Builder(this).build()
         playerView.player = player
-        player!!.setMediaItem(MediaItem.fromUri(videoUrl))
+        player!!.setMediaItem(MediaItem.fromUri(url))
         player!!.prepare()
         player!!.playWhenReady = true
         dialog.setOnDismissListener { player?.release(); player = null }
