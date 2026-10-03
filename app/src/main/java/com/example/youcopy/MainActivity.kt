@@ -1,6 +1,7 @@
 package com.example.youcopy
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.view.ViewGroup
@@ -16,16 +17,22 @@ class MainActivity : Activity() {
     private var player: ExoPlayer? = null
     private lateinit var catalogList: ListView
     private lateinit var status: TextView
-
+    private lateinit var items: JSONArray
     private val catalogUrl = "https://raw.githubusercontent.com/trixluans23-droid/YouCopy-Android/main/catalog.json"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(24, 24, 24, 24)
-        }
+        val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(24, 24, 24, 24) }
         root.addView(TextView(this).apply { text = "YouCopy"; textSize = 28f })
+
+        val categories = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        listOf("Todos", "Filmes", "Séries", "TV ao Vivo", "18+").forEach { label ->
+            val button = Button(this).apply { text = label }
+            categories.addView(button, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            button.setOnClickListener { filterCatalog(label) }
+        }
+        root.addView(categories)
+
         status = TextView(this).apply { text = "Carregando catálogo online..."; textSize = 16f }
         root.addView(status)
         catalogList = ListView(this)
@@ -43,23 +50,8 @@ class MainActivity : Activity() {
                 connection.requestMethod = "GET"
                 val jsonText = connection.inputStream.bufferedReader().use { it.readText() }
                 connection.disconnect()
-
-                val items = JSONArray(jsonText)
-                val titles = ArrayList<String>()
-                val videoUrls = ArrayList<String>()
-                for (i in 0 until items.length()) {
-                    val item = items.getJSONObject(i)
-                    val type = item.optString("type", "Filme")
-                    val name = item.optString("title", "Sem título")
-                    titles.add("$type • $name")
-                    videoUrls.add(item.optString("videoUrl", ""))
-                }
-
-                runOnUiThread {
-                    status.text = "Catálogo online • " + titles.size + " título(s)"
-                    catalogList.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, titles)
-                    catalogList.setOnItemClickListener { _, _, position, _ -> playVideo(videoUrls[position]) }
-                }
+                items = JSONArray(jsonText)
+                runOnUiThread { filterCatalog("Todos") }
             } catch (e: Exception) {
                 runOnUiThread {
                     status.text = "Não foi possível carregar o catálogo online."
@@ -69,9 +61,49 @@ class MainActivity : Activity() {
         }.start()
     }
 
+    private fun filterCatalog(category: String) {
+        if (!::items.isInitialized) return
+        val titles = ArrayList<String>()
+        for (i in 0 until items.length()) {
+            val item = items.getJSONObject(i)
+            val type = item.optString("type", "Filme")
+            val matches = category == "Todos" ||
+                (category == "Filmes" && type == "Filme") ||
+                (category == "Séries" && type == "Série") ||
+                (category == "TV ao Vivo" && type == "TV") ||
+                (category == "18+" && type == "18+")
+            if (matches) titles.add("$type • " + item.optString("title", "Sem título"))
+        }
+        status.text = category + " • " + titles.size + " item(ns)"
+        catalogList.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, titles)
+        catalogList.setOnItemClickListener { _, _, position, _ ->
+            val filtered = ArrayList<String>()
+            for (i in 0 until items.length()) {
+                val item = items.getJSONObject(i)
+                val type = item.optString("type", "Filme")
+                val matches = category == "Todos" ||
+                    (category == "Filmes" && type == "Filme") ||
+                    (category == "Séries" && type == "Série") ||
+                    (category == "TV ao Vivo" && type == "TV") ||
+                    (category == "18+" && type == "18+")
+                if (matches) filtered.add(item.optString("videoUrl", ""))
+            }
+            if (category == "18+") {
+                AlertDialog.Builder(this)
+                    .setTitle("Conteúdo 18+")
+                    .setMessage("Esta área é destinada exclusivamente a maiores de 18 anos.")
+                    .setNegativeButton("Voltar", null)
+                    .setPositiveButton("Continuar") { _, _ -> playVideo(filtered[position]) }
+                    .show()
+            } else {
+                playVideo(filtered[position])
+            }
+        }
+    }
+
     private fun playVideo(videoUrl: String) {
         if (videoUrl.isBlank()) {
-            Toast.makeText(this, "Este título ainda não possui vídeo.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Este item ainda não possui vídeo.", Toast.LENGTH_SHORT).show()
             return
         }
         val dialog = Dialog(this)
