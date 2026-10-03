@@ -1,10 +1,1 @@
-[
-  {"type":"Filme","title":"The General (1926)","videoUrl":"https://ia800502.us.archive.org/2/items/TheGeneral1926/The_General_1926_720p.mp4"},
-  {"type":"Filme","title":"His Girl Friday (1940)","videoUrl":"https://ia600309.us.archive.org/5/items/his_girl_friday/his_girl_friday.mpeg"},
-  {"type":"Filme","title":"Big Buck Bunny","videoUrl":"https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"},
-  {"type":"Filme","title":"Elephants Dream","videoUrl":"https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"},
-  {"type":"Filme","title":"Sintel","videoUrl":"https://download.blender.org/demo/movies/Sintel.2010.1080p.mkv"},
-  {"type":"Filme","title":"Tears of Steel","videoUrl":"https://download.blender.org/demo/movies/ToS/tears_of_steel_720p.mov"},
-  {"type":"Série","title":"Episódio de teste","videoUrl":"https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"},
-  {"type":"TV","title":"Canal de teste ao vivo","videoUrl":"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
-]
+[]
