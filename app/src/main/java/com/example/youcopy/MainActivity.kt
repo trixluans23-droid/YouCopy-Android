@@ -210,7 +210,7 @@ class MainActivity : Activity() {
         }
         val lower = url.lowercase()
         val isDirectVideo = lower.contains(".mp4") || lower.contains(".m3u8") ||
-            lower.contains(".mkv") || lower.contains(".mov") || lower.contains(".webm")
+            lower.contains(".mkv") || lower.contains(".mov") || lower.contains(".webm") || lower.contains("manifest") || lower.contains("playlist")
 
         if (!isDirectVideo) {
             try {
